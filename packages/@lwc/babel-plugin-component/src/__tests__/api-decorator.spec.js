@@ -88,6 +88,9 @@ describe('Transform property', () => {
                     outer: {
                       config: 0
                     }
+                  },
+                  track: {
+                    a: 1
                   }
                 });
 
@@ -333,6 +336,10 @@ describe('Transform property', () => {
                     b: {
                       config: 3
                     }
+                  },
+                  track: {
+                    _a: 1,
+                    _b: 1
                   }
                 });
 
@@ -405,7 +412,11 @@ describe('Transform property', () => {
                       config: 3
                     }
                   },
-                  publicMethods: ["m1"]
+                  publicMethods: ["m1"],
+                  track: {
+                      privateProp: 1,
+                      ctor: 1
+                  }
                 });
 
                 export default _registerComponent(Text, {
