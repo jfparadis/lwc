@@ -82,6 +82,72 @@ describe('Transform property', () => {
     );
 
     pluginTest(
+        'transform non lwc decorated values to track when no prop is tracked',
+        `
+        import { api, wire, createElement } from 'lwc';
+        export default class Test {
+            state;
+            
+            @api label;
+            
+            record = {
+                value: 'test'
+            };
+            
+            @api
+            someMethod() {}
+            
+            @wire(createElement) wiredProp;
+        }
+    `,
+        {
+            output: {
+                code: `
+                import { registerDecorators as _registerDecorators } from "lwc";
+                import _tmpl from "./test.html";
+                import { registerComponent as _registerComponent } from "lwc";
+                import { createElement } from "lwc";
+                
+                class Test {
+                  constructor() {
+                    this.state = void 0;
+                    this.label = void 0;
+                    this.record = {
+                      value: "test"
+                    };
+                    this.wiredProp = void 0;
+                  }
+                
+                  someMethod() {}
+                }
+                
+                _registerDecorators(Test, {
+                  publicProps: {
+                    label: {
+                      config: 0
+                    }
+                  },
+                  publicMethods: ["someMethod"],
+                  wire: {
+                    wiredProp: {
+                      adapter: createElement
+                    }
+                  },
+                  track: {
+                    state: 1,
+                    record: 1
+                  }
+                });
+                
+                export default _registerComponent(Test, {
+                  tmpl: _tmpl
+                });
+                `,
+            },
+        }
+    );
+
+    pluginTest(
         'throws if track decorator is applied to a getter',
         `
         import { track } from 'lwc';
